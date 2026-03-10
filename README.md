@@ -1,10 +1,10 @@
-# Phishing URL Detection 
-![image](https://github.com/user-attachments/assets/024b3e8f-4b83-474d-b5ab-b91707ed54ec)
-![image](https://github.com/user-attachments/assets/485da2a6-f181-438f-b2db-781ac31871bb)
+# Phishing URL Detection
 
 ## Table of Content
   * [Introduction](#introduction)
   * [Installation](#installation)
+  * [Running the API](#running-the-api)
+  * [API Usage](#api-usage)
   * [Directory Tree](#directory-tree)
   * [Result](#result)
   * [Conclusion](#conclusion)
@@ -16,38 +16,120 @@ The Internet has become an indispensable part of our life, However, It also has 
 
 
 ## Installation
-The Code is written in Python 3.6.10. If you don't have Python installed you can find it [here](https://www.python.org/downloads/). If you are using a lower version of Python you can upgrade using the pip package, ensuring you have the latest version of pip. To install the required packages and libraries, run this command in the project directory after [cloning](https://www.howtogeek.com/451360/how-to-clone-a-github-repository/) the repository:
+
+This project requires **Python 3.12+** and uses [uv](https://docs.astral.sh/uv/) for fast, reliable dependency management.
+
+### 1. Install uv
+
+If you don't have `uv` installed, you can install it with:
+
 ```bash
-pip install -r requirements.txt
+# On macOS / Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# On Windows
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 
-## Directory Tree 
+### 2. Clone the repository
+
+```bash
+git clone https://github.com/your-username/Phishing-URL-Detection.git
+cd Phishing-URL-Detection
 ```
-├── pickle
-│   ├── model.pkl
-├── static
-│   ├── styles.css
-├── templates
-│   ├── index.html
+
+### 3. Install dependencies
+
+```bash
+uv sync
+```
+
+This reads `pyproject.toml`, creates a virtual environment automatically, and installs all dependencies — no manual `venv` activation needed.
+
+> **Note:** A `requirements.txt` is still provided for compatibility, but `uv sync` with `pyproject.toml` is the recommended approach.
+
+
+## Running the API
+
+The API is built with **FastAPI** and served via **Uvicorn**.
+
+### Development server
+
+```bash
+uv run fastapi dev api/main.py
+```
+
+This starts the server at `http://127.0.0.1:8000` with hot-reload enabled.
+
+### Production server
+
+```bash
+uv run fastapi run api/main.py
+```
+
+### Interactive API docs
+
+Once the server is running, visit:
+
+- **Swagger UI:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- **ReDoc:** [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
+
+
+## API Usage
+
+### `POST /predict`
+
+Send a JSON body with the URL to check:
+
+```bash
+curl -X POST http://127.0.0.1:8000/predict \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com"}'
+```
+
+**Response:**
+
+```json
+{
+  "url": "https://example.com",
+  "is_safe": true,
+  "confidence_safe_percentage": 97.42,
+  "confidence_phishing_percentage": 2.58,
+  "raw_prediction_class": 1
+}
+```
+
+
+## Directory Tree
+```
+├── api/
+│   ├── __init__.py
+│   └── main.py                # FastAPI application
+├── core/
+│   ├── __init__.py
+│   └── feature.py             # Feature extraction logic
+├── models/
+│   └── phishing_model.joblib  # Trained ML model
+├── Phishing-URL-Api-Testing/
+│   ├── opencollection.yml
+│   └── Predict.yml            # API test collections
 ├── Phishing URL Detection.ipynb
 ├── Procfile
+├── pyproject.toml             # Project config & dependencies (uv)
 ├── README.md
-├── app.py
-├── feature.py
 ├── phishing.csv
-├── requirements.txt
-
-
+└── requirements.txt           # Legacy pip requirements
 ```
 
 ## Technologies Used
 
-![](https://forthebadge.com/images/badges/made-with-python.svg)
-
-[<img target="_blank" src="https://upload.wikimedia.org/wikipedia/commons/3/31/NumPy_logo_2020.svg" width=200>](https://numpy.org/doc/) [<img target="_blank" src="https://upload.wikimedia.org/wikipedia/commons/e/ed/Pandas_logo.svg" width=200>](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html)
-[<img target="_blank" src="https://upload.wikimedia.org/wikipedia/commons/8/84/Matplotlib_icon.svg" width=100>](https://matplotlib.org/)
-[<img target="_blank" src="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" width=200>](https://scikit-learn.org/stable/) 
-[<img target="_blank" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScq-xocLctL07Jy0tpR_p9w0Q42_rK1aAkNfW6sm3ucjFKWML39aaJPgdhadyCnEiK7vw&usqp=CAU" width=200>](https://flask.palletsprojects.com/en/2.0.x/) 
+- [Python 3.12+](https://www.python.org/)
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [scikit-learn](https://scikit-learn.org/stable/)
+- [NumPy](https://numpy.org/doc/)
+- [Pandas](https://pandas.pydata.org/)
+- [Matplotlib](https://matplotlib.org/)
+- [uv](https://docs.astral.sh/uv/)
 
 ## Result
 
@@ -56,23 +138,18 @@ Accuracy of various model used for URL detection
 
 <br>
 
-||ML Model|	Accuracy|  	f1_score|	Recall|	Precision|
+||ML Model|Accuracy|  f1_score|Recall|Precision|
 |---|---|---|---|---|---|
-0|	Gradient Boosting Classifier|	0.974|	0.977|	0.994|	0.986|
-1|	CatBoost Classifier|	        0.972|	0.975|	0.994|	0.989|
-2|	XGBoost Classifier| 	        0.969|	0.973|	0.993|	0.984|
-3|	Multi-layer Perceptron|	        0.969|	0.973|	0.995|	0.981|
-4|	Random Forest|	                0.967|	0.971|	0.993|	0.990|
-5|	Support Vector Machine|	        0.964|	0.968|	0.980|	0.965|
-6|	Decision Tree|      	        0.960|	0.964|	0.991|	0.993|
-7|	K-Nearest Neighbors|        	0.956|	0.961|	0.991|	0.989|
-8|	Logistic Regression|        	0.934|	0.941|	0.943|	0.927|
-9|	Naive Bayes Classifier|     	0.605|	0.454|	0.292|	0.997|
-
-Feature importance for Phishing URL Detection 
-<br><br>
-![image](https://user-images.githubusercontent.com/79131292/144603941-19044aae-7d7b-4e9a-88a8-6adfd8626f77.png)
-
+0|Gradient Boosting Classifier|0.974|0.977|0.994|0.986|
+1|CatBoost Classifier|        0.972|0.975|0.994|0.989|
+2|XGBoost Classifier|         0.969|0.973|0.993|0.984|
+3|Multi-layer Perceptron|        0.969|0.973|0.995|0.981|
+4|Random Forest|                0.967|0.971|0.993|0.990|
+5|Support Vector Machine|        0.964|0.968|0.980|0.965|
+6|Decision Tree|              0.960|0.964|0.991|0.993|
+7|K-Nearest Neighbors|        0.956|0.961|0.991|0.989|
+8|Logistic Regression|        0.934|0.941|0.943|0.927|
+9|Naive Bayes Classifier|     0.605|0.454|0.292|0.997|
 
 
 
@@ -81,4 +158,3 @@ Feature importance for Phishing URL Detection
 2. Creating this notebook helped me to learn a lot about the features affecting the models to detect whether URL is safe or not, also I came to know how to tuned model and how they affect the model performance.
 3. The final conclusion on the Phishing dataset is that the some feature like "HTTTPS", "AnchorURL", "WebsiteTraffic" have more importance to classify URL is phishing URL or not. 
 4. Gradient Boosting Classifier currectly classify URL upto 97.4% respective classes and hence reduces the chance of malicious attachments.
-"# Phishing-URL-Detection" 
