@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Phishing Scanner</title>
+    <style>
+        body { width: 300px; padding: 15px; font-family: 'Segoe UI', sans-serif; background-color: #ffffff; margin: 0; }
+        .header { text-align: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
+        .header h3 { margin: 0; color: #333; font-size: 18px; }
+        
+        .btn { display: block; width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; transition: 0.3s; text-decoration: none; text-align: center; box-sizing: border-box; }
+        .btn-scan { background: #27ae60; color: white; }
+        .btn-scan:hover { background: #219150; }
+        .btn-dash { background: #f8f9fa; color: #3498db; border: 1px solid #3498db; }
+        .btn-dash:hover { background: #ebf5fb; }
+        
+        #result { margin-top: 15px; padding: 10px; border-radius: 6px; text-align: center; display: none; }
+        .result-safe { background-color: #eafaf1; border: 1px solid #27ae60; color: #27ae60; }
+        .result-phish { background-color: #fdedec; border: 1px solid #e74c3c; color: #e74c3c; }
+        
+        .confidence-text { font-size: 11px; color: #666; display: block; margin-top: 4px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h3>Phishing Detector</h3>
+    </div>
+    
+    <button id="scanCurrentBtn" class="btn btn-scan">SCAN CURRENT PAGE</button>
+    
+    <div id="result">
+        <strong id="statusLabel"></strong>
+        <span id="confidenceLabel" class="confidence-text"></span>
+    </div>
+
+    <div style="height: 1px; background: #eee; margin: 15px 0;"></div>
+    
+    <a href="dashboard.html" target="_blank" class="btn btn-dash">OPEN BULK DASHBOARD</a>
+
+    <script src="popup.js"></script>
+</body>
+</html>

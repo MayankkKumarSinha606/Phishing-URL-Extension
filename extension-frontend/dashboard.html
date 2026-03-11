@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Phishing Detection Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; padding: 40px; background-color: #f4f7f6; color: #333; margin: 0; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        h2 { color: #2c3e50; text-align: center; margin-bottom: 30px; font-size: 28px; }
+        
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px; }
+        .card { padding: 25px; border: 1px solid #e1e8ed; border-radius: 10px; background: #ffffff; transition: 0.3s; }
+        .card:hover { border-color: #3498db; }
+        .card h3 { margin-top: 0; color: #34495e; font-size: 18px; display: flex; align-items: center; gap: 10px; }
+        
+        textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; margin: 15px 0; resize: vertical; box-sizing: border-box; font-family: monospace; }
+        input[type="file"] { margin: 15px 0; font-size: 14px; }
+        
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 15px; transition: 0.2s; }
+        .btn-blue { background-color: #3498db; color: white; }
+        .btn-blue:hover { background-color: #2980b9; }
+        
+        #statusText { margin-top: 20px; font-weight: 600; text-align: center; min-height: 24px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 30px; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background-color: #f8f9fa; color: #7f8c8d; font-weight: 600; text-transform: uppercase; font-size: 12px; }
+        .safe-row { color: #27ae60; font-weight: bold; }
+        .phish-row { color: #e74c3c; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🎣 Phishing Analysis Center</h2>
+        
+        <div class="input-grid">
+            <div class="card">
+                <h3>📁 Bulk Excel Upload</h3>
+                <p style="color: #7f8c8d; font-size: 13px;">Upload .xlsx with a 'url' column.</p>
+                <input type="file" id="fileInput" accept=".xlsx, .xls">
+                <button id="uploadBtn" class="btn btn-blue">Analyze Spreadsheet</button>
+            </div>
+
+            <div class="card">
+                <h3>📝 Manual Entry</h3>
+                <p style="color: #7f8c8d; font-size: 13px;">Paste URLs separated by commas.</p>
+                <textarea id="textInput" rows="3" placeholder="example.com, suspicion.net"></textarea>
+                <button id="scanTextBtn" class="btn btn-blue">Run Manual Scan</button>
+            </div>
+        </div>
+
+        <div id="statusText"></div>
+
+        <table id="resultTable" style="display:none;">
+            <thead>
+                <tr>
+                    <th style="width: 50%;">Website URL</th>
+                    <th>Detection Result</th>
+                    <th>Safe %</th>
+                    <th>Phishing %</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+    <script src="dashboard.js"></script>
+</body>
+</html>
