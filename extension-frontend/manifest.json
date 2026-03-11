@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "Phishing URL Detector",
+  "version": "1.0",
+  "description": "Detect malicious URLs on the current page or in bulk via Dashboard.",
+  "permissions": [
+    "activeTab"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
