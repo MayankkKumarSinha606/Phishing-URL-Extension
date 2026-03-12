@@ -28,7 +28,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+#Whitelist of domains to bypass ML prediction
+WHITELIST=["linkedin.com", "github.com", "twitter.com", "facebook.com", "instagram.com", "google.com", "microsoft.com", "apple.com"]
 # 2. Load the Machine Learning Model exactly ONCE at startup
 try:
     model = joblib.load("pickle/model.pkl") 
@@ -52,7 +53,16 @@ def predict_phishing(request: URLRequest):
         clean_url = request.url.strip()
         if not clean_url.startswith("http://") and not clean_url.startswith("https://"):
             clean_url = "https://" + clean_url
-
+        # 1. WHITELIST CHECK (Single)
+        if any(domain in clean_url.lower() for domain in WHITELIST):
+            return {
+                "url": request.url,
+                "is_safe": True,
+                "confidence_safe_percentage": 100.0,
+                "confidence_phishing_percentage": 0.0,
+                "raw_prediction_class": 1,
+                "note": "Whitelisted Domain"
+            }
         obj = FeatureExtraction(clean_url)
         features_list = obj.getFeaturesList()
         
@@ -81,10 +91,13 @@ def predict_phishing(request: URLRequest):
 # ==========================================
 # NEW BATCH EXCEL UPLOAD ENDPOINT
 # ==========================================
+
 @app.post("/predict-batch")
 async def predict_batch(file: UploadFile = File(...)):
     if model is None:
         raise HTTPException(status_code=500, detail="Model not loaded. Check File path.")
+
+            #---------------------------------------------#
 
     try:
         # 1. Read the uploaded Excel file into a Pandas DataFrame
